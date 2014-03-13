@@ -1,0 +1,330 @@
+﻿<Page
+    x:Class="JSON.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:JSON"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+	<Page.Resources>
+		<DataTemplate x:Key="ItemTemplate">
+			<Grid HorizontalAlignment="Left" Width="250" Height="250"  >
+				<Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}">
+					<Image Source="{Binding Property3}" Stretch="UniformToFill"/>
+				</Border>
+				<StackPanel VerticalAlignment="Bottom" Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}">
+					<TextBlock Text="{Binding Property1}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextBlockStyle}" Height="60" TextWrapping="NoWrap" Margin="15,0,15,0"/>
+					<TextBlock Text="{Binding Property2}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+				</StackPanel>
+			</Grid>
+		</DataTemplate>
+		<CollectionViewSource x:Key="ItemsGroupedByGroup" IsSourceGrouped="True" ItemsPath="Items" Source="{Binding Groups, Source={StaticResource RecipiesData}}"/>
+		<DataTemplate x:Key="ItemTemplate1">
+			<Grid HorizontalAlignment="Left" Width="250" Height="250"  >
+				<Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}">
+					<Image Source="{Binding Property3}" Stretch="UniformToFill"/>
+				</Border>
+				<StackPanel VerticalAlignment="Bottom" Background="{StaticResource ListViewItemOverlayBackgroundThemeBrush}">
+                    <TextBlock Text="{Binding title}" Foreground="{StaticResource ListViewItemOverlayForegroundThemeBrush}" Style="{StaticResource TitleTextBlockStyle}" Height="60" TextWrapping="NoWrap" Margin="15,0,15,0"/>
+                    <TextBlock Text="{Binding ingredients}" Foreground="{StaticResource ListViewItemOverlaySecondaryForegroundThemeBrush}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap" Margin="15,0,15,10"/>
+				</StackPanel>
+			</Grid>
+		</DataTemplate>
+		<DataTemplate x:Key="ResultTemplate">
+			<Grid Height="110" Width="480" Margin="10" >
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition Width="Auto"/>
+					<ColumnDefinition Width="*"/>
+				</Grid.ColumnDefinitions>
+				<Border Background="{StaticResource ListViewItemPlaceholderBackgroundThemeBrush}" Width="110" Height="110">
+					<Image Height="110" Width="110"/>
+				</Border>
+				<StackPanel Grid.Column="1" Margin="10,0,0,0">
+					<TextBlock Text="{Binding title}" Style="{StaticResource TitleTextBlockStyle}"/>
+					<TextBlock Text="{Binding ingredients}" Style="{StaticResource CaptionTextBlockStyle}" TextWrapping="NoWrap"/>
+				</StackPanel>
+			</Grid>
+		</DataTemplate>
+		<Style x:Key="recipie" TargetType="TextBox">
+			<Setter Property="MinWidth" Value="{ThemeResource TextControlThemeMinWidth}"/>
+			<Setter Property="MinHeight" Value="{ThemeResource TextControlThemeMinHeight}"/>
+			<Setter Property="Foreground" Value="{ThemeResource TextBoxForegroundThemeBrush}"/>
+			<Setter Property="Background" Value="{ThemeResource TextBoxBackgroundThemeBrush}"/>
+			<Setter Property="BorderBrush" Value="{ThemeResource TextBoxBorderThemeBrush}"/>
+			<Setter Property="SelectionHighlightColor" Value="{ThemeResource TextSelectionHighlightColorThemeBrush}"/>
+			<Setter Property="BorderThickness" Value="{ThemeResource TextControlBorderThemeThickness}"/>
+			<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+			<Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+			<Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Hidden"/>
+			<Setter Property="ScrollViewer.VerticalScrollBarVisibility" Value="Hidden"/>
+			<Setter Property="ScrollViewer.IsDeferredScrollingEnabled" Value="False"/>
+			<Setter Property="Padding" Value="{ThemeResource TextControlThemePadding}"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="TextBox">
+						<Grid>
+							<Grid.Resources>
+								<Style x:Name="DeleteButtonStyle" TargetType="Button">
+									<Setter Property="Template">
+										<Setter.Value>
+											<ControlTemplate TargetType="Button">
+												<Grid>
+													<VisualStateManager.VisualStateGroups>
+														<VisualStateGroup x:Name="CommonStates">
+															<VisualState x:Name="Normal"/>
+															<VisualState x:Name="PointerOver">
+																<Storyboard>
+																	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="BackgroundElement">
+																		<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBoxButtonPointerOverBackgroundThemeBrush}"/>
+																	</ObjectAnimationUsingKeyFrames>
+																	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="BorderElement">
+																		<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBoxButtonPointerOverBorderThemeBrush}"/>
+																	</ObjectAnimationUsingKeyFrames>
+																	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="GlyphElement">
+																		<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBoxButtonPointerOverForegroundThemeBrush}"/>
+																	</ObjectAnimationUsingKeyFrames>
+																</Storyboard>
+															</VisualState>
+															<VisualState x:Name="Pressed">
+																<Storyboard>
+																	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="BackgroundElement">
+																		<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBoxButtonPressedBackgroundThemeBrush}"/>
+																	</ObjectAnimationUsingKeyFrames>
+																	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="BorderElement">
+																		<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBoxButtonPressedBorderThemeBrush}"/>
+																	</ObjectAnimationUsingKeyFrames>
+																	<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="GlyphElement">
+																		<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBoxButtonPressedForegroundThemeBrush}"/>
+																	</ObjectAnimationUsingKeyFrames>
+																</Storyboard>
+															</VisualState>
+															<VisualState x:Name="Disabled">
+																<Storyboard>
+																	<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundElement"/>
+																	<DoubleAnimation Duration="0" To="0" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BorderElement"/>
+																</Storyboard>
+															</VisualState>
+														</VisualStateGroup>
+													</VisualStateManager.VisualStateGroups>
+													<Border x:Name="BorderElement" BorderBrush="{ThemeResource TextBoxButtonBorderThemeBrush}" BorderThickness="{TemplateBinding BorderThickness}"/>
+													<Border x:Name="BackgroundElement" Background="{ThemeResource TextBoxButtonBackgroundThemeBrush}" Margin="{TemplateBinding BorderThickness}">
+														<TextBlock x:Name="GlyphElement" AutomationProperties.AccessibilityView="Raw" Foreground="{ThemeResource TextBoxButtonForegroundThemeBrush}" FontStyle="Normal" FontFamily="{ThemeResource SymbolThemeFontFamily}" HorizontalAlignment="Center" Text="&#xE0A4;" VerticalAlignment="Center"/>
+													</Border>
+												</Grid>
+											</ControlTemplate>
+										</Setter.Value>
+									</Setter>
+								</Style>
+							</Grid.Resources>
+							<Grid.ColumnDefinitions>
+								<ColumnDefinition Width="*"/>
+								<ColumnDefinition Width="Auto"/>
+							</Grid.ColumnDefinitions>
+							<Grid.RowDefinitions>
+								<RowDefinition Height="Auto"/>
+								<RowDefinition Height="*"/>
+							</Grid.RowDefinitions>
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="CommonStates">
+									<VisualState x:Name="Disabled">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="BackgroundElement">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBoxDisabledBackgroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="BorderElement">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBoxDisabledBorderThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentElement">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="PlaceholderTextContentPresenter">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource TextBoxDisabledForegroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Normal">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="{ThemeResource TextControlBackgroundThemeOpacity}" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundElement"/>
+											<DoubleAnimation Duration="0" To="{ThemeResource TextControlBorderThemeOpacity}" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BorderElement"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="PointerOver">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="{ThemeResource TextControlPointerOverBackgroundThemeOpacity}" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BackgroundElement"/>
+											<DoubleAnimation Duration="0" To="{ThemeResource TextControlPointerOverBorderThemeOpacity}" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="BorderElement"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Focused"/>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="ButtonStates">
+									<VisualState x:Name="ButtonVisible">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Visibility" Storyboard.TargetName="DeleteButton">
+												<DiscreteObjectKeyFrame KeyTime="0">
+													<DiscreteObjectKeyFrame.Value>
+														<Visibility>Visible</Visibility>
+													</DiscreteObjectKeyFrame.Value>
+												</DiscreteObjectKeyFrame>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="ButtonCollapsed"/>
+								</VisualStateGroup>
+							</VisualStateManager.VisualStateGroups>
+							<Border x:Name="BackgroundElement" Background="{TemplateBinding Background}" Grid.ColumnSpan="2" Margin="{TemplateBinding BorderThickness}" Grid.Row="1" Grid.RowSpan="1" CornerRadius="30"/>
+							<Border x:Name="BorderElement" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Grid.Row="1" Grid.RowSpan="1" CornerRadius="30" Margin="2,0"/>
+							<ContentPresenter x:Name="HeaderContentPresenter" Grid.ColumnSpan="2" ContentTemplate="{TemplateBinding HeaderTemplate}" Content="{TemplateBinding Header}" Foreground="{ThemeResource TextBoxForegroundHeaderThemeBrush}" FontWeight="Semilight" Margin="0,4,0,4" Grid.Row="0"/>
+							<ScrollViewer x:Name="ContentElement" AutomationProperties.AccessibilityView="Raw" HorizontalScrollMode="{TemplateBinding ScrollViewer.HorizontalScrollMode}" HorizontalScrollBarVisibility="{TemplateBinding ScrollViewer.HorizontalScrollBarVisibility}" IsTabStop="False" IsHorizontalRailEnabled="{TemplateBinding ScrollViewer.IsHorizontalRailEnabled}" IsVerticalRailEnabled="{TemplateBinding ScrollViewer.IsVerticalRailEnabled}" IsDeferredScrollingEnabled="{TemplateBinding ScrollViewer.IsDeferredScrollingEnabled}" Margin="15,-1,15,5" Padding="{TemplateBinding Padding}" Grid.Row="1" VerticalScrollBarVisibility="{TemplateBinding ScrollViewer.VerticalScrollBarVisibility}" VerticalScrollMode="{TemplateBinding ScrollViewer.VerticalScrollMode}" ZoomMode="Disabled" FontSize="40"/>
+							<ContentControl x:Name="PlaceholderTextContentPresenter" Content="{TemplateBinding PlaceholderText}" Foreground="{ThemeResource TextBoxPlaceholderTextThemeBrush}" IsHitTestVisible="False" IsTabStop="False" Margin="22,1,26,-5" Padding="{TemplateBinding Padding}" Grid.Row="1"/>
+							<Button x:Name="DeleteButton" BorderThickness="{TemplateBinding BorderThickness}" Grid.Column="1" FontSize="{TemplateBinding FontSize}" IsTabStop="False" Grid.Row="1" Style="{StaticResource DeleteButtonStyle}" Visibility="Collapsed" VerticalAlignment="Stretch"/>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+		<Style x:Key="ButtonStyle1" TargetType="Button">
+			<Setter Property="Background" Value="{ThemeResource ButtonBackgroundThemeBrush}"/>
+			<Setter Property="Foreground" Value="{ThemeResource ButtonForegroundThemeBrush}"/>
+			<Setter Property="BorderBrush" Value="{ThemeResource ButtonBorderThemeBrush}"/>
+			<Setter Property="BorderThickness" Value="{ThemeResource ButtonBorderThemeThickness}"/>
+			<Setter Property="Padding" Value="12,4,12,4"/>
+			<Setter Property="HorizontalAlignment" Value="Left"/>
+			<Setter Property="VerticalAlignment" Value="Center"/>
+			<Setter Property="FontFamily" Value="{ThemeResource ContentControlThemeFontFamily}"/>
+			<Setter Property="FontWeight" Value="SemiBold"/>
+			<Setter Property="FontSize" Value="{ThemeResource ControlContentThemeFontSize}"/>
+			<Setter Property="Template">
+				<Setter.Value>
+					<ControlTemplate TargetType="Button">
+						<Grid>
+							<VisualStateManager.VisualStateGroups>
+								<VisualStateGroup x:Name="CommonStates">
+									<VisualState x:Name="Normal"/>
+									<VisualState x:Name="PointerOver">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Border">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonPointerOverBackgroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonPointerOverForegroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Pressed">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Border">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonPressedBackgroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonPressedForegroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Disabled">
+										<Storyboard>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Background" Storyboard.TargetName="Border">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonDisabledBackgroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="BorderBrush" Storyboard.TargetName="Border">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonDisabledBorderThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+											<ObjectAnimationUsingKeyFrames Storyboard.TargetProperty="Foreground" Storyboard.TargetName="ContentPresenter">
+												<DiscreteObjectKeyFrame KeyTime="0" Value="{ThemeResource ButtonDisabledForegroundThemeBrush}"/>
+											</ObjectAnimationUsingKeyFrames>
+										</Storyboard>
+									</VisualState>
+								</VisualStateGroup>
+								<VisualStateGroup x:Name="FocusStates">
+									<VisualState x:Name="Focused">
+										<Storyboard>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualWhite"/>
+											<DoubleAnimation Duration="0" To="1" Storyboard.TargetProperty="Opacity" Storyboard.TargetName="FocusVisualBlack"/>
+										</Storyboard>
+									</VisualState>
+									<VisualState x:Name="Unfocused"/>
+									<VisualState x:Name="PointerFocused"/>
+								</VisualStateGroup>
+							</VisualStateManager.VisualStateGroups>
+							<Border x:Name="Border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" Margin="3" CornerRadius="15">
+								<ContentPresenter x:Name="ContentPresenter" AutomationProperties.AccessibilityView="Raw" ContentTemplate="{TemplateBinding ContentTemplate}" ContentTransitions="{TemplateBinding ContentTransitions}" Content="{TemplateBinding Content}" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+							</Border>
+							<Rectangle x:Name="FocusVisualWhite" IsHitTestVisible="False" Opacity="0" StrokeDashOffset="1.5" StrokeEndLineCap="Square" Stroke="{ThemeResource FocusVisualWhiteStrokeThemeBrush}" StrokeDashArray="1,1" Margin="0,-3,0,3"/>
+							<Rectangle x:Name="FocusVisualBlack" IsHitTestVisible="False" Opacity="0" StrokeDashOffset="0.5" StrokeEndLineCap="Square" Stroke="{ThemeResource FocusVisualBlackStrokeThemeBrush}" StrokeDashArray="1,1" Margin="0,-3,0,3"/>
+						</Grid>
+					</ControlTemplate>
+				</Setter.Value>
+			</Setter>
+		</Style>
+	</Page.Resources>
+	<Page.BottomAppBar>
+		<AppBar>
+			<Grid>
+				<Grid.ColumnDefinitions>
+					<ColumnDefinition/>
+					<ColumnDefinition/>
+				</Grid.ColumnDefinitions>
+				<StackPanel Orientation="Horizontal"/>
+				<AppBarButton HorizontalAlignment="Left" Label="LikeUs" VerticalAlignment="Top" Icon="Like"/>
+				<StackPanel Grid.Column="1" HorizontalAlignment="Right" Orientation="Horizontal"/>
+			</Grid>
+		</AppBar>
+	</Page.BottomAppBar>
+
+    <Grid >
+    	<Grid.Background>
+    		<ImageBrush Stretch="Fill" ImageSource="thebackground.png"/>
+    	</Grid.Background>
+    	<Grid.RowDefinitions>
+    		<RowDefinition Height="113*"/>
+    		<RowDefinition Height="655*"/>
+    	</Grid.RowDefinitions>
+        <Rectangle Fill="Black" HorizontalAlignment="Left" Height="682" Margin="255,86,0,0" Stroke="Black" VerticalAlignment="Top" Width="818" Opacity="0.685" Grid.RowSpan="2"/>
+
+        <Rectangle Fill="#FFFFC500" HorizontalAlignment="Left" Height="74" Stroke="Black" VerticalAlignment="Top" Width="1366"/>
+        <Rectangle Fill="#FFFFC500" HorizontalAlignment="Left" Height="84" Margin="197,254,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="928"/>
+        <Path Data="M198.333,532.837 L252,576 L252.168,532.068 z" Fill="#FFFFC500" HorizontalAlignment="Left" Height="48.667" Margin="1069.001,335.5,0,0" Grid.Row="1" Stretch="Fill" Stroke="#FFFFC500" UseLayoutRounding="False" VerticalAlignment="Top" Width="54.834" RenderTransformOrigin="0.5,0.5">
+        	<Path.RenderTransform>
+        		<CompositeTransform ScaleX="-1" TranslateX="-0.167999267578125"/>
+        	</Path.RenderTransform>
+        </Path>
+        <Path Data="M197.305,532.188 L252,576 L251.794,530.19 z" Fill="#FFFFC500" HorizontalAlignment="Left" Height="50.705" Margin="163.311,333.462,0,0" Grid.Row="1" Stretch="Fill" Stroke="#FFFFC500" UseLayoutRounding="False" VerticalAlignment="Top" Width="56.375" RenderTransformOrigin="0.177,0.767">
+        	<Path.RenderTransform>
+        		<CompositeTransform TranslateX="35.314998626708984"/>
+        	</Path.RenderTransform>
+        </Path>
+        <TextBox x:Name="tbx_recipie" HorizontalAlignment="Left" Margin="272,263,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="65" Width="545" FontSize="48" Grid.Row="1" Style="{StaticResource recipie}" BorderThickness="9,7" Foreground="Black" BorderBrush="#FF0A5470"/>
+        <Button x:Name="btn_tumHeHoo" Margin="820,263,0,327" Height="65" Width="225" Content="Search" Background="#FF0A5470" FontSize="22" Click="btn_tumHeHoo_Click" Grid.Row="1" Style="{StaticResource ButtonStyle1}" BorderBrush="#FFFFC500"/>
+        <TextBox x:Name="tbx_ingrediants" HorizontalAlignment="Left" Margin="314,392,0,0" TextWrapping="Wrap" VerticalAlignment="Top" Height="172" Width="689" FontSize="48" Grid.Row="1" Style="{StaticResource recipie}" BorderThickness="10,7" BorderBrush="#FF3B6B5A" Foreground="Black"/>
+        <Rectangle Fill="White" HorizontalAlignment="Left" Height="14" Margin="255,35,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="257"/>
+        <Rectangle Fill="White" HorizontalAlignment="Left" Height="14" Margin="823,35,0,0" Grid.Row="1" Stroke="Black" VerticalAlignment="Top" Width="250"/>
+        <TextBlock HorizontalAlignment="Left" Height="120" Margin="522,5,0,0" Grid.Row="1" TextWrapping="Wrap" Text="Welcome To" VerticalAlignment="Top" Width="311" FontFamily="Blackadder ITC" FontSize="66.667"/>
+        <Path Data="M49.9219,36.4688 C53.0781,39.3438 54.6562,43 54.6562,47.4375 C54.6562,54.625 50.0781,60.0781 40.9219,63.7969 C42.8906,70.2344 46.375,76.5312 51.375,82.6875 C54.5,86.5312 58.4531,89.9844 63.2344,93.0469 C56.0781,94.9531 49.3594,97.8594 43.0781,101.766 L42.6562,102.047 L41.7188,101.297 C47.6875,97.3906 54.0469,94.5156 60.7969,92.6719 C51.7969,86.6719 44.7188,77.0781 39.5625,63.8906 L39.2812,63.0938 C48.8437,59.4688 53.625,53.9375 53.625,46.5 C53.625,43.4375 52.3906,40.0938 49.9219,36.4688 z M26.5781,33.8438 C23.2969,33.8438 20.5312,34.4531 18.2812,35.6719 L18.2812,60.9375 C19.1875,60.9375 20.0469,60.8594 20.8594,60.7031 L20.8594,37.6406 C22.5781,37.1719 24.6406,36.9375 27.0469,36.9375 C33.1406,36.9375 37.2812,38.9375 39.4688,42.9375 C37.1562,41.0625 35.125,39.7734 33.375,39.0703 C31.625,38.3672 29.5312,38.0156 27.0938,38.0156 C25.1875,38.0156 23.5156,38.2031 22.0781,38.5781 L22.0781,60.7031 L22.5938,60.6094 C28.75,59.4844 33.3203,57.7109 36.3047,55.2891 C39.2891,52.8672 40.7812,49.7188 40.7812,45.8438 C40.7812,42.375 39.4375,39.5078 36.75,37.2422 C34.0625,34.9766 30.6719,33.8438 26.5781,33.8438 z M28.0312,30.4688 C34.6562,30.4688 40.1172,31.9063 44.4141,34.7812 C48.7109,37.6563 50.8594,41.3125 50.8594,45.75 C50.8594,49.375 49.4531,52.5859 46.6406,55.3828 C43.8281,58.1797 39.9844,60.2031 35.1094,61.4531 C37.2656,67.3906 40.1953,73.1719 43.8984,78.7969 C47.6016,84.4219 51.3125,88.7344 55.0312,91.7344 L54.3281,91.9688 C49.6719,93.5625 45.1094,95.8125 40.6406,98.7188 L39.9375,99.1875 L39.7031,97.6875 C37.7031,85.5938 34.9062,75.3438 31.3125,66.9375 L31.125,66.4688 C28.9687,67.4688 26.0781,68.2656 22.4531,68.8594 L22.0781,68.9062 L22.0781,86.4375 L30.3281,95.25 L6.09375,95.25 L5.34375,93.9844 L27.6562,93.9844 L20.8594,86.7656 L20.8594,67.875 L21.8438,67.7344 C25.4062,67.3594 28.3906,66.6562 30.7969,65.625 C30.6094,65.25 30.5,65.0156 30.4688,64.9219 L30,63.5625 C29.9687,63.4688 29.8906,63.2812 29.7656,63 C27.8281,63.5625 24.1719,64.1719 18.7969,64.8281 L18.2812,64.9219 L18.2812,85.8281 L23.625,91.4062 L2.90625,91.4062 L9,85.8281 L9,70.0781 L8.625,70.125 C6.8125,70.5312 5.17188,70.9844 3.70313,71.4844 L3.32812,71.625 L2.90625,70.6875 C4.28125,70.1562 5.35938,69.7969 6.14063,69.6094 L8.625,69 L9,68.9062 L9,66.4688 C7.15625,66.4688 4.85937,66.875 2.10938,67.6875 L1.59375,67.875 C1.65625,67.4375 1.96875,66.4219 2.53125,64.8281 C2.59375,64.7031 2.8125,64 3.1875,62.7188 C3.21875,62.625 3.26562,62.4844 3.32812,62.2969 C4.73438,62.3906 5.82812,62.4375 6.60937,62.4375 C7.45312,62.4375 8.23438,62.3906 8.95312,62.2969 L8.95312,39.2344 C7.51562,38.3594 6.03125,37.625 4.5,37.0312 L4.125,36.8906 C11.5312,32.6094 19.5,30.4688 28.0312,30.4688 z M110.624,77.7188 L112.124,78.2812 C113.843,82.2812 116.749,86.2812 120.843,90.2812 L121.593,91.0312 L119.155,95.25 L67.9677,95.25 L67.2177,93.9844 L118.546,93.9844 L120.14,91.0312 C115.64,86.875 112.468,82.4375 110.624,77.7188 z M101.015,49.5469 L102.186,50.1562 L102.186,70.875 L101.015,70.2656 z M115.311,33.5625 L115.968,34.5469 L115.64,34.9688 C111.827,40.0938 109.28,44.3906 107.999,47.8594 L107.202,46.875 C109.296,42.0313 111.999,37.5938 115.311,33.5625 z M63.7021,31.2656 L113.718,31.2656 L112.968,32.1562 C109.78,36.0625 107.249,40.5469 105.374,45.6094 C105.061,44.8906 104.827,44.3594 104.671,44.0156 C102.952,40.2656 101.108,37.8438 99.1396,36.75 C97.1708,35.6563 93.6396,35.1094 88.5458,35.1094 C86.2021,35.1094 83.3896,35.1875 80.1083,35.3438 L80.1083,56.9062 L83.1083,56.9062 L83.1083,37.8281 C85.4833,37.6094 87.749,37.5 89.9052,37.5 C93.874,37.5 96.7958,37.9219 98.6708,38.7656 C100.546,39.6094 102.218,41.25 103.686,43.6875 C103.249,43.375 102.936,43.1406 102.749,42.9844 C100.218,40.9844 98.3896,39.7969 97.2646,39.4219 C96.1396,39.0469 93.9208,38.8594 90.6083,38.8594 C89.6083,38.8594 87.8271,38.9219 85.2646,39.0469 L84.2802,39.0938 L84.2802,56.9062 L92.9052,56.9062 L98.9521,48.6094 L98.9521,68.8125 L92.9052,60.9844 L80.1083,60.9844 L80.1083,87.2812 L83.1083,87.2812 L83.1083,63.1875 L93.2802,63.1875 L94.499,64.4062 L84.2802,64.4062 L84.2802,87.2812 C90.6552,87.2812 95.1865,86.8281 97.874,85.9219 C100.561,85.0156 102.671,83.2344 104.202,80.5781 L106.686,76.3125 C106.78,76.125 106.968,75.7812 107.249,75.2812 C108.061,78.7188 109.069,81.4688 110.272,83.5312 C111.476,85.5938 113.468,88 116.249,90.75 L63.7021,90.75 L70.8271,85.3125 L70.8271,64.4062 C68.2021,64.7188 65.8271,65.5312 63.7021,66.8438 L63.0458,65.8594 C64.9521,64.4844 67.5458,63.5938 70.8271,63.1875 L70.8271,60.9844 C70.2958,60.9219 69.9208,60.8906 69.7021,60.8906 C66.5146,60.8906 63.6083,62.0625 60.9833,64.4062 C62.4208,59.4062 65.7021,56.9062 70.8271,56.9062 L70.8271,36.8906 z M172.172,72.4219 L173.532,73.0312 C173.032,80.7812 170.868,86.6797 167.039,90.7266 C163.211,94.7734 157.86,96.7969 150.985,96.7969 C145.766,96.7969 140.907,95.1875 136.407,91.9688 L136.407,91.5938 C140.407,94.2188 145.235,95.5312 150.891,95.5312 C157.079,95.5312 162.125,93.5469 166.032,89.5781 C167.938,87.6406 169.344,85.4688 170.25,83.0625 C171.157,80.6562 171.766,77.4688 172.079,73.5 z M149.954,36.2344 C152.954,36.2344 155.719,37.5625 158.25,40.2188 L158.25,40.8281 C155.407,38.5469 152.719,37.4063 150.188,37.4062 C142.094,37.4063 138.047,45.125 138.047,60.5625 C138.047,67.5938 138.985,73.4453 140.86,78.1172 C142.735,82.7891 145.375,85.8125 148.782,87.1875 L148.782,87.6562 C145.094,86.9062 142.149,84.0703 139.946,79.1484 C137.743,74.2266 136.641,68 136.641,60.4688 C136.641,44.3125 141.079,36.2344 149.954,36.2344 z M174.188,34.3125 L175.266,34.9688 L174.75,35.8594 C171.344,41.6719 168.625,46.9688 166.594,51.75 L165.329,51.1406 L165.844,49.9688 C167.407,46.6875 168.782,43.9688 169.969,41.8125 L173.719,35.1562 z M148.875,29.7188 C152.375,29.7188 156.36,30.5781 160.829,32.2969 C163.172,33.2031 165.11,33.6563 166.641,33.6562 C168.297,33.6563 169.782,33.2031 171.094,32.2969 L171.844,32.7188 L171.329,33.6094 C168.516,38.5156 166.079,43.4219 164.016,48.3281 L163.594,49.4062 L162.985,49.0781 C162.266,44.3281 160.594,40.5625 157.969,37.7812 C155.344,35 152.172,33.6094 148.454,33.6094 C144.485,33.6094 141.172,35.3438 138.516,38.8125 C135.172,43.125 133.5,50.4375 133.5,60.75 C133.5,69.625 135.039,76.5781 138.118,81.6094 C141.196,86.6406 145.469,89.1562 150.938,89.1562 C155.313,89.1562 158.805,87.6953 161.414,84.7734 C164.024,81.8516 165.579,77.6719 166.079,72.2344 C166.204,70.9219 166.735,70.2656 167.672,70.2656 C168.891,70.2656 169.5,71.2812 169.5,73.3125 C169.5,76.3438 168.813,79.4844 167.438,82.7344 C164.532,89.6094 158.532,93.0469 149.438,93.0469 C141.313,93.0469 134.86,90.1953 130.079,84.4922 C125.297,78.7891 122.907,71.0781 122.907,61.3594 C122.907,52.3906 125.391,44.875 130.36,38.8125 C135.329,32.75 141.5,29.7188 148.875,29.7188 z M201.983,33 L202.78,33.9375 L197.999,38.6719 L197.999,86.4375 L205.874,95.25 L181.499,95.25 L180.327,93.9844 L203.108,93.9844 L196.686,86.9062 L196.686,38.25 z M178.452,31.2656 L200.671,31.2656 L194.389,37.6406 L194.389,86.4375 L200.296,91.4062 L178.452,91.4062 L184.967,86.0156 L184.967,37.125 z M255.373,36.2812 C257.28,37.2188 258.811,38.8672 259.967,41.2266 C261.123,43.5859 261.701,46.2656 261.701,49.2656 C261.701,56.0469 259.076,60.9219 253.826,63.8906 C249.858,66.1406 243.076,67.2656 233.483,67.2656 C231.889,67.2656 230.545,67.2344 229.451,67.1719 L229.451,86.5312 L236.811,95.25 L213.326,95.25 L212.061,93.9844 L234.139,93.9844 L228.139,87.0469 L228.139,65.9062 C230.858,66.0625 233.748,66.1406 236.811,66.1406 C244.873,66.1406 250.858,64.7188 254.764,61.875 C258.67,59.0312 260.623,54.6719 260.623,48.7969 C260.623,46.3594 260.248,44.2422 259.498,42.4453 C258.748,40.6484 257.373,38.5938 255.373,36.2812 z M231.092,35.9062 C229.623,35.9063 227.826,35.9688 225.701,36.0938 L225.701,59.5781 L226.311,59.5781 L227.53,59.625 C227.655,59.625 227.858,59.6094 228.139,59.5781 L228.139,38.6719 L233.295,38.6719 C237.295,38.6719 240.116,39.0234 241.756,39.7266 C243.397,40.4297 244.795,41.8906 245.951,44.1094 C244.795,42.5156 243.35,41.3984 241.616,40.7578 C239.881,40.1172 237.436,39.7969 234.28,39.7969 L229.451,39.7969 L229.451,59.5781 C235.639,59.5781 240.178,58.6719 243.069,56.8594 C245.959,55.0469 247.405,52.2031 247.405,48.3281 C247.405,43.9844 246.116,40.8281 243.537,38.8594 C240.959,36.8906 236.811,35.9063 231.092,35.9062 z M210.42,31.2656 L231.467,31.2656 C240.405,31.2656 246.764,32.5 250.545,34.9688 C255.358,38.0625 257.764,42.3594 257.764,47.8594 C257.764,51.2031 256.842,54.1094 254.998,56.5781 C253.155,59.0469 250.576,60.8281 247.264,61.9219 C243.951,63.0156 238.686,63.5625 231.467,63.5625 L225.701,63.5625 L225.701,86.25 L231.42,91.4062 L209.623,91.4062 L216.139,85.9219 L216.139,67.125 C215.764,67.0938 215.498,67.0781 215.342,67.0781 C213.092,67.0781 210.936,67.5625 208.873,68.5312 L208.451,67.6875 C210.545,66.5 212.42,65.9062 214.076,65.9062 L215.764,65.9062 L216.139,65.8594 L216.139,63.5625 C215.42,63.4688 214.936,63.4219 214.686,63.4219 C211.342,63.4219 208.67,64.2344 206.67,65.8594 L206.201,65.1562 C208.108,61.6562 211.17,59.9062 215.389,59.9062 L216.139,59.9062 L216.139,36.9375 z M288.093,33 L288.89,33.9375 L284.109,38.6719 L284.109,86.4375 L291.984,95.25 L267.609,95.25 L266.437,93.9844 L289.218,93.9844 L282.796,86.9062 L282.796,38.25 z M264.562,31.2656 L286.781,31.2656 L280.499,37.6406 L280.499,86.4375 L286.406,91.4062 L264.562,91.4062 L271.078,86.0156 L271.078,37.125 z M341.624,77.7188 L343.124,78.2812 C344.843,82.2812 347.749,86.2812 351.843,90.2812 L352.593,91.0312 L350.155,95.25 L298.968,95.25 L298.218,93.9844 L349.546,93.9844 L351.14,91.0312 C346.64,86.875 343.468,82.4375 341.624,77.7188 z M332.015,49.5469 L333.186,50.1562 L333.186,70.875 L332.015,70.2656 z M346.311,33.5625 L346.968,34.5469 L346.64,34.9688 C342.827,40.0938 340.28,44.3906 338.999,47.8594 L338.202,46.875 C340.296,42.0313 342.999,37.5938 346.311,33.5625 z M294.702,31.2656 L344.718,31.2656 L343.968,32.1562 C340.78,36.0625 338.249,40.5469 336.374,45.6094 C336.061,44.8906 335.827,44.3594 335.671,44.0156 C333.952,40.2656 332.108,37.8438 330.14,36.75 C328.171,35.6563 324.64,35.1094 319.546,35.1094 C317.202,35.1094 314.39,35.1875 311.108,35.3438 L311.108,56.9062 L314.108,56.9062 L314.108,37.8281 C316.483,37.6094 318.749,37.5 320.905,37.5 C324.874,37.5 327.796,37.9219 329.671,38.7656 C331.546,39.6094 333.218,41.25 334.686,43.6875 C334.249,43.375 333.936,43.1406 333.749,42.9844 C331.218,40.9844 329.39,39.7969 328.265,39.4219 C327.14,39.0469 324.921,38.8594 321.608,38.8594 C320.608,38.8594 318.827,38.9219 316.265,39.0469 L315.28,39.0938 L315.28,56.9062 L323.905,56.9062 L329.952,48.6094 L329.952,68.8125 L323.905,60.9844 L311.108,60.9844 L311.108,87.2812 L314.108,87.2812 L314.108,63.1875 L324.28,63.1875 L325.499,64.4062 L315.28,64.4062 L315.28,87.2812 C321.655,87.2812 326.186,86.8281 328.874,85.9219 C331.561,85.0156 333.671,83.2344 335.202,80.5781 L337.686,76.3125 C337.78,76.125 337.968,75.7812 338.249,75.2812 C339.061,78.7188 340.069,81.4688 341.272,83.5312 C342.476,85.5938 344.468,88 347.249,90.75 L294.702,90.75 L301.827,85.3125 L301.827,64.4062 C299.202,64.7188 296.827,65.5312 294.702,66.8438 L294.046,65.8594 C295.952,64.4844 298.546,63.5938 301.827,63.1875 L301.827,60.9844 C301.296,60.9219 300.921,60.8906 300.702,60.8906 C297.515,60.8906 294.608,62.0625 291.983,64.4062 C293.421,59.4062 296.702,56.9062 301.827,56.9062 L301.827,36.8906 z M432.188,32.9062 L432.938,33.8906 L428.157,38.5312 L428.157,86.3438 L435.938,95.25 L411.61,95.25 L410.438,93.9844 L433.266,93.9844 L426.985,86.9062 L426.985,38.0625 z M378.704,31.2656 L400.735,31.2656 L394.36,37.5 L394.36,57.75 C395.079,57.875 395.922,57.9688 396.891,58.0312 L396.891,37.9688 L402,32.9062 L402.938,33.75 L398.11,38.5312 L398.11,58.0781 L399.657,58.2188 C402.063,58.4375 404.391,58.5469 406.641,58.5469 C409.891,58.5469 412.688,58.3906 415.032,58.0781 L415.032,36.5156 L409.313,31.2656 L430.969,31.2656 L424.5,37.5 L424.5,86.3438 L430.172,91.4062 L408.61,91.4062 L415.032,85.9219 L415.032,66.0469 C412.407,66.6719 409.704,66.9844 406.922,66.9844 C404.297,66.9844 401.579,66.8438 398.766,66.5625 L398.11,66.5156 L398.11,86.3438 L405.844,95.25 L381.61,95.25 L380.391,93.9844 L403.266,93.9844 L396.891,87 L396.891,65.4375 L398.25,65.5312 C402.375,65.8438 405.36,66 407.204,66 C410.204,66 412.813,65.5938 415.032,64.7812 L415.032,63.0938 C412.094,63.5312 408.672,63.75 404.766,63.75 C402.672,63.75 401.141,63.7031 400.172,63.6094 L395.438,63.1875 C395.25,63.1562 394.891,63.125 394.36,63.0938 L394.36,86.3438 L400.36,91.4062 L378.704,91.4062 L384.985,85.9219 L384.985,65.4375 C382.36,65.4375 380.266,66.4688 378.704,68.5312 L377.719,68.0625 C379.532,65.7812 381.954,64.5156 384.985,64.2656 L384.985,62.5312 C381.485,62.5312 378.719,63.8594 376.688,66.5156 L375.985,66.0469 C377.829,61.5469 380.829,58.8906 384.985,58.0781 L384.985,36.9844 z M492.562,33.4688 L493.265,34.4531 L486.89,39.75 L486.89,68.8594 C486.89,78.3906 486.14,84.6094 484.64,87.5156 C481.577,93.3906 475.593,96.3281 466.687,96.3281 C458.999,96.3281 453.218,94.4062 449.343,90.5625 L449.718,90.75 L451.359,91.6875 C455.202,93.9375 460.14,95.0625 466.171,95.0625 C474.796,95.0625 480.515,92.3438 483.327,86.9062 C484.827,83.9688 485.577,78.0625 485.577,69.1875 L485.577,39.1875 z M460.968,32.8125 L461.624,33.7969 L457.03,38.4375 L457.03,73.2656 L456.984,76.5 L458.437,82.4531 C459.155,83.6406 460.515,85.0781 462.515,86.7656 L462.609,87.1875 C459.984,86.125 458.171,84.5781 457.171,82.5469 C456.171,80.5156 455.671,77.375 455.671,73.125 L455.671,37.9688 z M437.53,31.2656 L459.655,31.2656 L453.28,37.5 L453.28,68.1562 L453.374,75.375 C453.374,80.0312 454.343,83.3359 456.28,85.2891 C458.218,87.2422 461.484,88.2188 466.077,88.2188 C471.14,88.2188 474.624,86.7344 476.53,83.7656 C478.062,81.3594 478.827,76.2031 478.827,68.2969 L479.015,37.9688 L471.702,31.2656 L491.671,31.2656 L483.28,37.9688 L483.28,68.25 C483.28,73.8125 483.101,77.8125 482.741,80.25 C482.382,82.6875 481.671,84.6875 480.609,86.25 C477.921,90.25 472.702,92.25 464.952,92.25 C456.765,92.25 451.046,90.25 447.796,86.25 C445.202,83.0938 443.905,77.0469 443.905,68.1094 L443.905,36.9844 z M547.172,65.2031 C550.516,67.7969 552.188,71.7344 552.188,77.0156 C552.188,82.3281 550.328,86.7188 546.609,90.1875 C542.984,93.5625 537.656,95.25 530.625,95.25 L498.75,95.25 L497.953,93.9844 L527.531,93.9844 C533.969,93.9844 538.609,93.3281 541.453,92.0156 C547.766,89.0781 550.922,83.9688 550.922,76.6875 C550.922,72.625 549.484,68.9375 546.609,65.625 z M516.516,61.7344 C515.734,61.7344 514.25,61.7969 512.062,61.9219 L512.062,87.75 L514.406,87.75 L514.406,64.7344 C516.625,64.5781 518.219,64.5 519.188,64.5 C524.375,64.5 528.133,64.9844 530.461,65.9531 C532.789,66.9219 534.641,68.7656 536.016,71.4844 L535.453,71.4844 C533.922,69.3281 532,67.8359 529.688,67.0078 C527.375,66.1797 523.984,65.7656 519.516,65.7656 L515.672,65.8594 L515.672,87.75 L517.172,87.75 L523.969,87.5156 C532.781,86.8906 537.188,82.6094 537.188,74.6719 C537.188,69.7031 535.734,66.3047 532.828,64.4766 C529.922,62.6484 524.484,61.7344 516.516,61.7344 z M522.188,33.9844 C518.719,33.9844 515.344,34.9688 512.062,36.9375 L512.062,58.0781 C512.406,58.0469 512.641,58.0312 512.766,58.0312 L513.609,58.0781 C513.734,58.0781 514,58.0781 514.406,58.0781 L514.406,38.9062 C517.094,37.6563 519.719,37.0313 522.281,37.0312 C525.219,37.0313 527.539,37.5625 529.242,38.625 C530.945,39.6875 532.391,41.5 533.578,44.0625 L532.266,43.3125 C529.922,39.7813 526.578,38.0156 522.234,38.0156 C519.797,38.0156 517.609,38.7031 515.672,40.0781 L515.672,58.0781 L517.641,58.0781 C523.609,58.0781 528.055,57.0859 530.977,55.1016 C533.898,53.1172 535.359,50.0781 535.359,45.9844 C535.359,42.3906 534.148,39.4922 531.727,37.2891 C529.305,35.0859 526.125,33.9844 522.188,33.9844 z M522.422,30.2812 C529.141,30.2812 534.625,31.7891 538.875,34.8047 C543.125,37.8203 545.25,41.7188 545.25,46.5 C545.25,52.875 541.562,57.1406 534.188,59.2969 L534.188,59.8125 C534.938,60 535.844,60.25 536.906,60.5625 C540.375,59.75 543.102,58.0938 545.086,55.5938 C547.07,53.0938 548.062,50.0781 548.062,46.5469 C548.062,42.1094 546.234,38.1719 542.578,34.7344 L542.578,34.4531 L543.094,34.875 C547.188,38.0313 549.234,42.0781 549.234,47.0156 C549.234,53.8281 545.703,58.5781 538.641,61.2656 C541.703,62.6719 544.086,64.6719 545.789,67.2656 C547.492,69.8594 548.344,72.7812 548.344,76.0312 C548.344,80.6875 546.656,84.4141 543.281,87.2109 C539.906,90.0078 535.406,91.4062 529.781,91.4062 L496.219,91.4062 L502.688,85.875 L502.688,65.5781 C500.844,65.5781 498.688,65.7656 496.219,66.1406 L495.844,64.7812 C498.625,64.5 500.906,64.3594 502.688,64.3594 L502.688,61.875 L501.516,61.875 C499.766,61.875 497.562,62 494.906,62.25 L496.969,57.75 L497.719,57.7969 C498.938,57.8906 499.859,57.9375 500.484,57.9375 C501.422,57.9375 502.156,57.9844 502.688,58.0781 L502.688,40.4531 L497.391,37.6406 C504.828,32.7344 513.172,30.2812 522.422,30.2812 z" Fill="Black" Margin="383.094,116.719,425.145,465.953" Grid.Row="1" RenderTransformOrigin="0.5,0.5" Stretch="Fill" UseLayoutRounding="False">
+        	<Path.RenderTransform>
+        		<TransformGroup>
+        			<ScaleTransform/>
+        			<SkewTransform/>
+        			<RotateTransform/>
+        			<TranslateTransform/>
+        		</TransformGroup>
+        	</Path.RenderTransform>
+        </Path>
+        <Path Data="M49.9219,36.4688 C53.0781,39.3438 54.6562,43 54.6562,47.4375 C54.6562,54.625 50.0781,60.0781 40.9219,63.7969 C42.8906,70.2344 46.375,76.5312 51.375,82.6875 C54.5,86.5312 58.4531,89.9844 63.2344,93.0469 C56.0781,94.9531 49.3594,97.8594 43.0781,101.766 L42.6562,102.047 L41.7188,101.297 C47.6875,97.3906 54.0469,94.5156 60.7969,92.6719 C51.7969,86.6719 44.7188,77.0781 39.5625,63.8906 L39.2812,63.0938 C48.8437,59.4688 53.625,53.9375 53.625,46.5 C53.625,43.4375 52.3906,40.0938 49.9219,36.4688 z M26.5781,33.8438 C23.2969,33.8438 20.5312,34.4531 18.2812,35.6719 L18.2812,60.9375 C19.1875,60.9375 20.0469,60.8594 20.8594,60.7031 L20.8594,37.6406 C22.5781,37.1719 24.6406,36.9375 27.0469,36.9375 C33.1406,36.9375 37.2812,38.9375 39.4688,42.9375 C37.1562,41.0625 35.125,39.7734 33.375,39.0703 C31.625,38.3672 29.5312,38.0156 27.0938,38.0156 C25.1875,38.0156 23.5156,38.2031 22.0781,38.5781 L22.0781,60.7031 L22.5938,60.6094 C28.75,59.4844 33.3203,57.7109 36.3047,55.2891 C39.2891,52.8672 40.7812,49.7188 40.7812,45.8438 C40.7812,42.375 39.4375,39.5078 36.75,37.2422 C34.0625,34.9766 30.6719,33.8438 26.5781,33.8438 z M28.0312,30.4688 C34.6562,30.4688 40.1172,31.9063 44.4141,34.7812 C48.7109,37.6563 50.8594,41.3125 50.8594,45.75 C50.8594,49.375 49.4531,52.5859 46.6406,55.3828 C43.8281,58.1797 39.9844,60.2031 35.1094,61.4531 C37.2656,67.3906 40.1953,73.1719 43.8984,78.7969 C47.6016,84.4219 51.3125,88.7344 55.0312,91.7344 L54.3281,91.9688 C49.6719,93.5625 45.1094,95.8125 40.6406,98.7188 L39.9375,99.1875 L39.7031,97.6875 C37.7031,85.5938 34.9062,75.3438 31.3125,66.9375 L31.125,66.4688 C28.9687,67.4688 26.0781,68.2656 22.4531,68.8594 L22.0781,68.9062 L22.0781,86.4375 L30.3281,95.25 L6.09375,95.25 L5.34375,93.9844 L27.6562,93.9844 L20.8594,86.7656 L20.8594,67.875 L21.8438,67.7344 C25.4062,67.3594 28.3906,66.6562 30.7969,65.625 C30.6094,65.25 30.5,65.0156 30.4688,64.9219 L30,63.5625 C29.9687,63.4688 29.8906,63.2812 29.7656,63 C27.8281,63.5625 24.1719,64.1719 18.7969,64.8281 L18.2812,64.9219 L18.2812,85.8281 L23.625,91.4062 L2.90625,91.4062 L9,85.8281 L9,70.0781 L8.625,70.125 C6.8125,70.5312 5.17188,70.9844 3.70313,71.4844 L3.32812,71.625 L2.90625,70.6875 C4.28125,70.1562 5.35938,69.7969 6.14063,69.6094 L8.625,69 L9,68.9062 L9,66.4688 C7.15625,66.4688 4.85937,66.875 2.10938,67.6875 L1.59375,67.875 C1.65625,67.4375 1.96875,66.4219 2.53125,64.8281 C2.59375,64.7031 2.8125,64 3.1875,62.7188 C3.21875,62.625 3.26562,62.4844 3.32812,62.2969 C4.73438,62.3906 5.82812,62.4375 6.60937,62.4375 C7.45312,62.4375 8.23438,62.3906 8.95312,62.2969 L8.95312,39.2344 C7.51562,38.3594 6.03125,37.625 4.5,37.0312 L4.125,36.8906 C11.5312,32.6094 19.5,30.4688 28.0312,30.4688 z M110.624,77.7188 L112.124,78.2812 C113.843,82.2812 116.749,86.2812 120.843,90.2812 L121.593,91.0312 L119.155,95.25 L67.9677,95.25 L67.2177,93.9844 L118.546,93.9844 L120.14,91.0312 C115.64,86.875 112.468,82.4375 110.624,77.7188 z M101.015,49.5469 L102.186,50.1562 L102.186,70.875 L101.015,70.2656 z M115.311,33.5625 L115.968,34.5469 L115.64,34.9688 C111.827,40.0938 109.28,44.3906 107.999,47.8594 L107.202,46.875 C109.296,42.0313 111.999,37.5938 115.311,33.5625 z M63.7021,31.2656 L113.718,31.2656 L112.968,32.1562 C109.78,36.0625 107.249,40.5469 105.374,45.6094 C105.061,44.8906 104.827,44.3594 104.671,44.0156 C102.952,40.2656 101.108,37.8438 99.1396,36.75 C97.1708,35.6563 93.6396,35.1094 88.5458,35.1094 C86.2021,35.1094 83.3896,35.1875 80.1083,35.3438 L80.1083,56.9062 L83.1083,56.9062 L83.1083,37.8281 C85.4833,37.6094 87.749,37.5 89.9052,37.5 C93.874,37.5 96.7958,37.9219 98.6708,38.7656 C100.546,39.6094 102.218,41.25 103.686,43.6875 C103.249,43.375 102.936,43.1406 102.749,42.9844 C100.218,40.9844 98.3896,39.7969 97.2646,39.4219 C96.1396,39.0469 93.9208,38.8594 90.6083,38.8594 C89.6083,38.8594 87.8271,38.9219 85.2646,39.0469 L84.2802,39.0938 L84.2802,56.9062 L92.9052,56.9062 L98.9521,48.6094 L98.9521,68.8125 L92.9052,60.9844 L80.1083,60.9844 L80.1083,87.2812 L83.1083,87.2812 L83.1083,63.1875 L93.2802,63.1875 L94.499,64.4062 L84.2802,64.4062 L84.2802,87.2812 C90.6552,87.2812 95.1865,86.8281 97.874,85.9219 C100.561,85.0156 102.671,83.2344 104.202,80.5781 L106.686,76.3125 C106.78,76.125 106.968,75.7812 107.249,75.2812 C108.061,78.7188 109.069,81.4688 110.272,83.5312 C111.476,85.5938 113.468,88 116.249,90.75 L63.7021,90.75 L70.8271,85.3125 L70.8271,64.4062 C68.2021,64.7188 65.8271,65.5312 63.7021,66.8438 L63.0458,65.8594 C64.9521,64.4844 67.5458,63.5938 70.8271,63.1875 L70.8271,60.9844 C70.2958,60.9219 69.9208,60.8906 69.7021,60.8906 C66.5146,60.8906 63.6083,62.0625 60.9833,64.4062 C62.4208,59.4062 65.7021,56.9062 70.8271,56.9062 L70.8271,36.8906 z M172.172,72.4219 L173.532,73.0312 C173.032,80.7812 170.868,86.6797 167.039,90.7266 C163.211,94.7734 157.86,96.7969 150.985,96.7969 C145.766,96.7969 140.907,95.1875 136.407,91.9688 L136.407,91.5938 C140.407,94.2188 145.235,95.5312 150.891,95.5312 C157.079,95.5312 162.125,93.5469 166.032,89.5781 C167.938,87.6406 169.344,85.4688 170.25,83.0625 C171.157,80.6562 171.766,77.4688 172.079,73.5 z M149.954,36.2344 C152.954,36.2344 155.719,37.5625 158.25,40.2188 L158.25,40.8281 C155.407,38.5469 152.719,37.4063 150.188,37.4062 C142.094,37.4063 138.047,45.125 138.047,60.5625 C138.047,67.5938 138.985,73.4453 140.86,78.1172 C142.735,82.7891 145.375,85.8125 148.782,87.1875 L148.782,87.6562 C145.094,86.9062 142.149,84.0703 139.946,79.1484 C137.743,74.2266 136.641,68 136.641,60.4688 C136.641,44.3125 141.079,36.2344 149.954,36.2344 z M174.188,34.3125 L175.266,34.9688 L174.75,35.8594 C171.344,41.6719 168.625,46.9688 166.594,51.75 L165.329,51.1406 L165.844,49.9688 C167.407,46.6875 168.782,43.9688 169.969,41.8125 L173.719,35.1562 z M148.875,29.7188 C152.375,29.7188 156.36,30.5781 160.829,32.2969 C163.172,33.2031 165.11,33.6563 166.641,33.6562 C168.297,33.6563 169.782,33.2031 171.094,32.2969 L171.844,32.7188 L171.329,33.6094 C168.516,38.5156 166.079,43.4219 164.016,48.3281 L163.594,49.4062 L162.985,49.0781 C162.266,44.3281 160.594,40.5625 157.969,37.7812 C155.344,35 152.172,33.6094 148.454,33.6094 C144.485,33.6094 141.172,35.3438 138.516,38.8125 C135.172,43.125 133.5,50.4375 133.5,60.75 C133.5,69.625 135.039,76.5781 138.118,81.6094 C141.196,86.6406 145.469,89.1562 150.938,89.1562 C155.313,89.1562 158.805,87.6953 161.414,84.7734 C164.024,81.8516 165.579,77.6719 166.079,72.2344 C166.204,70.9219 166.735,70.2656 167.672,70.2656 C168.891,70.2656 169.5,71.2812 169.5,73.3125 C169.5,76.3438 168.813,79.4844 167.438,82.7344 C164.532,89.6094 158.532,93.0469 149.438,93.0469 C141.313,93.0469 134.86,90.1953 130.079,84.4922 C125.297,78.7891 122.907,71.0781 122.907,61.3594 C122.907,52.3906 125.391,44.875 130.36,38.8125 C135.329,32.75 141.5,29.7188 148.875,29.7188 z M201.983,33 L202.78,33.9375 L197.999,38.6719 L197.999,86.4375 L205.874,95.25 L181.499,95.25 L180.327,93.9844 L203.108,93.9844 L196.686,86.9062 L196.686,38.25 z M178.452,31.2656 L200.671,31.2656 L194.389,37.6406 L194.389,86.4375 L200.296,91.4062 L178.452,91.4062 L184.967,86.0156 L184.967,37.125 z M255.373,36.2812 C257.28,37.2188 258.811,38.8672 259.967,41.2266 C261.123,43.5859 261.701,46.2656 261.701,49.2656 C261.701,56.0469 259.076,60.9219 253.826,63.8906 C249.858,66.1406 243.076,67.2656 233.483,67.2656 C231.889,67.2656 230.545,67.2344 229.451,67.1719 L229.451,86.5312 L236.811,95.25 L213.326,95.25 L212.061,93.9844 L234.139,93.9844 L228.139,87.0469 L228.139,65.9062 C230.858,66.0625 233.748,66.1406 236.811,66.1406 C244.873,66.1406 250.858,64.7188 254.764,61.875 C258.67,59.0312 260.623,54.6719 260.623,48.7969 C260.623,46.3594 260.248,44.2422 259.498,42.4453 C258.748,40.6484 257.373,38.5938 255.373,36.2812 z M231.092,35.9062 C229.623,35.9063 227.826,35.9688 225.701,36.0938 L225.701,59.5781 L226.311,59.5781 L227.53,59.625 C227.655,59.625 227.858,59.6094 228.139,59.5781 L228.139,38.6719 L233.295,38.6719 C237.295,38.6719 240.116,39.0234 241.756,39.7266 C243.397,40.4297 244.795,41.8906 245.951,44.1094 C244.795,42.5156 243.35,41.3984 241.616,40.7578 C239.881,40.1172 237.436,39.7969 234.28,39.7969 L229.451,39.7969 L229.451,59.5781 C235.639,59.5781 240.178,58.6719 243.069,56.8594 C245.959,55.0469 247.405,52.2031 247.405,48.3281 C247.405,43.9844 246.116,40.8281 243.537,38.8594 C240.959,36.8906 236.811,35.9063 231.092,35.9062 z M210.42,31.2656 L231.467,31.2656 C240.405,31.2656 246.764,32.5 250.545,34.9688 C255.358,38.0625 257.764,42.3594 257.764,47.8594 C257.764,51.2031 256.842,54.1094 254.998,56.5781 C253.155,59.0469 250.576,60.8281 247.264,61.9219 C243.951,63.0156 238.686,63.5625 231.467,63.5625 L225.701,63.5625 L225.701,86.25 L231.42,91.4062 L209.623,91.4062 L216.139,85.9219 L216.139,67.125 C215.764,67.0938 215.498,67.0781 215.342,67.0781 C213.092,67.0781 210.936,67.5625 208.873,68.5312 L208.451,67.6875 C210.545,66.5 212.42,65.9062 214.076,65.9062 L215.764,65.9062 L216.139,65.8594 L216.139,63.5625 C215.42,63.4688 214.936,63.4219 214.686,63.4219 C211.342,63.4219 208.67,64.2344 206.67,65.8594 L206.201,65.1562 C208.108,61.6562 211.17,59.9062 215.389,59.9062 L216.139,59.9062 L216.139,36.9375 z M288.093,33 L288.89,33.9375 L284.109,38.6719 L284.109,86.4375 L291.984,95.25 L267.609,95.25 L266.437,93.9844 L289.218,93.9844 L282.796,86.9062 L282.796,38.25 z M264.562,31.2656 L286.781,31.2656 L280.499,37.6406 L280.499,86.4375 L286.406,91.4062 L264.562,91.4062 L271.078,86.0156 L271.078,37.125 z M341.624,77.7188 L343.124,78.2812 C344.843,82.2812 347.749,86.2812 351.843,90.2812 L352.593,91.0312 L350.155,95.25 L298.968,95.25 L298.218,93.9844 L349.546,93.9844 L351.14,91.0312 C346.64,86.875 343.468,82.4375 341.624,77.7188 z M332.015,49.5469 L333.186,50.1562 L333.186,70.875 L332.015,70.2656 z M346.311,33.5625 L346.968,34.5469 L346.64,34.9688 C342.827,40.0938 340.28,44.3906 338.999,47.8594 L338.202,46.875 C340.296,42.0313 342.999,37.5938 346.311,33.5625 z M294.702,31.2656 L344.718,31.2656 L343.968,32.1562 C340.78,36.0625 338.249,40.5469 336.374,45.6094 C336.061,44.8906 335.827,44.3594 335.671,44.0156 C333.952,40.2656 332.108,37.8438 330.14,36.75 C328.171,35.6563 324.64,35.1094 319.546,35.1094 C317.202,35.1094 314.39,35.1875 311.108,35.3438 L311.108,56.9062 L314.108,56.9062 L314.108,37.8281 C316.483,37.6094 318.749,37.5 320.905,37.5 C324.874,37.5 327.796,37.9219 329.671,38.7656 C331.546,39.6094 333.218,41.25 334.686,43.6875 C334.249,43.375 333.936,43.1406 333.749,42.9844 C331.218,40.9844 329.39,39.7969 328.265,39.4219 C327.14,39.0469 324.921,38.8594 321.608,38.8594 C320.608,38.8594 318.827,38.9219 316.265,39.0469 L315.28,39.0938 L315.28,56.9062 L323.905,56.9062 L329.952,48.6094 L329.952,68.8125 L323.905,60.9844 L311.108,60.9844 L311.108,87.2812 L314.108,87.2812 L314.108,63.1875 L324.28,63.1875 L325.499,64.4062 L315.28,64.4062 L315.28,87.2812 C321.655,87.2812 326.186,86.8281 328.874,85.9219 C331.561,85.0156 333.671,83.2344 335.202,80.5781 L337.686,76.3125 C337.78,76.125 337.968,75.7812 338.249,75.2812 C339.061,78.7188 340.069,81.4688 341.272,83.5312 C342.476,85.5938 344.468,88 347.249,90.75 L294.702,90.75 L301.827,85.3125 L301.827,64.4062 C299.202,64.7188 296.827,65.5312 294.702,66.8438 L294.046,65.8594 C295.952,64.4844 298.546,63.5938 301.827,63.1875 L301.827,60.9844 C301.296,60.9219 300.921,60.8906 300.702,60.8906 C297.515,60.8906 294.608,62.0625 291.983,64.4062 C293.421,59.4062 296.702,56.9062 301.827,56.9062 L301.827,36.8906 z M432.188,32.9062 L432.938,33.8906 L428.157,38.5312 L428.157,86.3438 L435.938,95.25 L411.61,95.25 L410.438,93.9844 L433.266,93.9844 L426.985,86.9062 L426.985,38.0625 z M378.704,31.2656 L400.735,31.2656 L394.36,37.5 L394.36,57.75 C395.079,57.875 395.922,57.9688 396.891,58.0312 L396.891,37.9688 L402,32.9062 L402.938,33.75 L398.11,38.5312 L398.11,58.0781 L399.657,58.2188 C402.063,58.4375 404.391,58.5469 406.641,58.5469 C409.891,58.5469 412.688,58.3906 415.032,58.0781 L415.032,36.5156 L409.313,31.2656 L430.969,31.2656 L424.5,37.5 L424.5,86.3438 L430.172,91.4062 L408.61,91.4062 L415.032,85.9219 L415.032,66.0469 C412.407,66.6719 409.704,66.9844 406.922,66.9844 C404.297,66.9844 401.579,66.8438 398.766,66.5625 L398.11,66.5156 L398.11,86.3438 L405.844,95.25 L381.61,95.25 L380.391,93.9844 L403.266,93.9844 L396.891,87 L396.891,65.4375 L398.25,65.5312 C402.375,65.8438 405.36,66 407.204,66 C410.204,66 412.813,65.5938 415.032,64.7812 L415.032,63.0938 C412.094,63.5312 408.672,63.75 404.766,63.75 C402.672,63.75 401.141,63.7031 400.172,63.6094 L395.438,63.1875 C395.25,63.1562 394.891,63.125 394.36,63.0938 L394.36,86.3438 L400.36,91.4062 L378.704,91.4062 L384.985,85.9219 L384.985,65.4375 C382.36,65.4375 380.266,66.4688 378.704,68.5312 L377.719,68.0625 C379.532,65.7812 381.954,64.5156 384.985,64.2656 L384.985,62.5312 C381.485,62.5312 378.719,63.8594 376.688,66.5156 L375.985,66.0469 C377.829,61.5469 380.829,58.8906 384.985,58.0781 L384.985,36.9844 z M492.562,33.4688 L493.265,34.4531 L486.89,39.75 L486.89,68.8594 C486.89,78.3906 486.14,84.6094 484.64,87.5156 C481.577,93.3906 475.593,96.3281 466.687,96.3281 C458.999,96.3281 453.218,94.4062 449.343,90.5625 L449.718,90.75 L451.359,91.6875 C455.202,93.9375 460.14,95.0625 466.171,95.0625 C474.796,95.0625 480.515,92.3438 483.327,86.9062 C484.827,83.9688 485.577,78.0625 485.577,69.1875 L485.577,39.1875 z M460.968,32.8125 L461.624,33.7969 L457.03,38.4375 L457.03,73.2656 L456.984,76.5 L458.437,82.4531 C459.155,83.6406 460.515,85.0781 462.515,86.7656 L462.609,87.1875 C459.984,86.125 458.171,84.5781 457.171,82.5469 C456.171,80.5156 455.671,77.375 455.671,73.125 L455.671,37.9688 z M437.53,31.2656 L459.655,31.2656 L453.28,37.5 L453.28,68.1562 L453.374,75.375 C453.374,80.0312 454.343,83.3359 456.28,85.2891 C458.218,87.2422 461.484,88.2188 466.077,88.2188 C471.14,88.2188 474.624,86.7344 476.53,83.7656 C478.062,81.3594 478.827,76.2031 478.827,68.2969 L479.015,37.9688 L471.702,31.2656 L491.671,31.2656 L483.28,37.9688 L483.28,68.25 C483.28,73.8125 483.101,77.8125 482.741,80.25 C482.382,82.6875 481.671,84.6875 480.609,86.25 C477.921,90.25 472.702,92.25 464.952,92.25 C456.765,92.25 451.046,90.25 447.796,86.25 C445.202,83.0938 443.905,77.0469 443.905,68.1094 L443.905,36.9844 z M547.172,65.2031 C550.516,67.7969 552.188,71.7344 552.188,77.0156 C552.188,82.3281 550.328,86.7188 546.609,90.1875 C542.984,93.5625 537.656,95.25 530.625,95.25 L498.75,95.25 L497.953,93.9844 L527.531,93.9844 C533.969,93.9844 538.609,93.3281 541.453,92.0156 C547.766,89.0781 550.922,83.9688 550.922,76.6875 C550.922,72.625 549.484,68.9375 546.609,65.625 z M516.516,61.7344 C515.734,61.7344 514.25,61.7969 512.062,61.9219 L512.062,87.75 L514.406,87.75 L514.406,64.7344 C516.625,64.5781 518.219,64.5 519.188,64.5 C524.375,64.5 528.133,64.9844 530.461,65.9531 C532.789,66.9219 534.641,68.7656 536.016,71.4844 L535.453,71.4844 C533.922,69.3281 532,67.8359 529.688,67.0078 C527.375,66.1797 523.984,65.7656 519.516,65.7656 L515.672,65.8594 L515.672,87.75 L517.172,87.75 L523.969,87.5156 C532.781,86.8906 537.188,82.6094 537.188,74.6719 C537.188,69.7031 535.734,66.3047 532.828,64.4766 C529.922,62.6484 524.484,61.7344 516.516,61.7344 z M522.188,33.9844 C518.719,33.9844 515.344,34.9688 512.062,36.9375 L512.062,58.0781 C512.406,58.0469 512.641,58.0312 512.766,58.0312 L513.609,58.0781 C513.734,58.0781 514,58.0781 514.406,58.0781 L514.406,38.9062 C517.094,37.6563 519.719,37.0313 522.281,37.0312 C525.219,37.0313 527.539,37.5625 529.242,38.625 C530.945,39.6875 532.391,41.5 533.578,44.0625 L532.266,43.3125 C529.922,39.7813 526.578,38.0156 522.234,38.0156 C519.797,38.0156 517.609,38.7031 515.672,40.0781 L515.672,58.0781 L517.641,58.0781 C523.609,58.0781 528.055,57.0859 530.977,55.1016 C533.898,53.1172 535.359,50.0781 535.359,45.9844 C535.359,42.3906 534.148,39.4922 531.727,37.2891 C529.305,35.0859 526.125,33.9844 522.188,33.9844 z M522.422,30.2812 C529.141,30.2812 534.625,31.7891 538.875,34.8047 C543.125,37.8203 545.25,41.7188 545.25,46.5 C545.25,52.875 541.562,57.1406 534.188,59.2969 L534.188,59.8125 C534.938,60 535.844,60.25 536.906,60.5625 C540.375,59.75 543.102,58.0938 545.086,55.5938 C547.07,53.0938 548.062,50.0781 548.062,46.5469 C548.062,42.1094 546.234,38.1719 542.578,34.7344 L542.578,34.4531 L543.094,34.875 C547.188,38.0313 549.234,42.0781 549.234,47.0156 C549.234,53.8281 545.703,58.5781 538.641,61.2656 C541.703,62.6719 544.086,64.6719 545.789,67.2656 C547.492,69.8594 548.344,72.7812 548.344,76.0312 C548.344,80.6875 546.656,84.4141 543.281,87.2109 C539.906,90.0078 535.406,91.4062 529.781,91.4062 L496.219,91.4062 L502.688,85.875 L502.688,65.5781 C500.844,65.5781 498.688,65.7656 496.219,66.1406 L495.844,64.7812 C498.625,64.5 500.906,64.3594 502.688,64.3594 L502.688,61.875 L501.516,61.875 C499.766,61.875 497.562,62 494.906,62.25 L496.969,57.75 L497.719,57.7969 C498.938,57.8906 499.859,57.9375 500.484,57.9375 C501.422,57.9375 502.156,57.9844 502.688,58.0781 L502.688,40.4531 L497.391,37.6406 C504.828,32.7344 513.172,30.2812 522.422,30.2812 z" Fill="White" Margin="387.594,116.719,427.812,465.953" Grid.Row="1" RenderTransformOrigin="0.5,0.5" Stretch="Fill" UseLayoutRounding="False">
+        	<Path.RenderTransform>
+        		<TransformGroup>
+        			<ScaleTransform/>
+        			<SkewTransform/>
+        			<RotateTransform/>
+        			<TranslateTransform/>
+        		</TransformGroup>
+        	</Path.RenderTransform>
+        </Path>
+        <Grid Margin="23,5,1218,42">
+        	<Path Data="M14,0 L87.8555,0 L87.9277,0.568583 C87.9755,1.03922 88,1.51675 88,2 L88,18 C88,25.732 81.732,32 74,32 L0.144531,32 L0.072281,31.4314 C0.024485,30.9608 0,30.4832 0,30 L0,14 C0,6.26801 6.26801,1E-06 14,0 z" Fill="Black" HorizontalAlignment="Left" Height="59" Margin="0,3,0,0" Stretch="Fill" UseLayoutRounding="False" VerticalAlignment="Top" Width="119"/>
+        	<TextBlock HorizontalAlignment="Left" Height="44" Margin="26,0,0,0" TextWrapping="Wrap" Text="RH" VerticalAlignment="Top" Width="75" FontFamily="Algerian" Foreground="White" FontSize="48"/>
+        	<Rectangle Fill="#FFFFC500" HorizontalAlignment="Left" Height="4" Margin="2,47,0,0" Stroke="Black" VerticalAlignment="Top" Width="112"/>
+        	<Rectangle Fill="#FFFFC500" HorizontalAlignment="Left" Height="3" Margin="8,51,0,0" Stroke="Black" VerticalAlignment="Top" Width="99"/>
+
+        </Grid>
+
+    </Grid>
+</Page>
